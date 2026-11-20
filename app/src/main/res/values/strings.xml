@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SMOQ Bonus Clicker</string>
+    <string name="accessibility_description">Wykrywa ekran BONUS w SMOQ i klika wyłącznie przycisk OK.</string>
+</resources>
