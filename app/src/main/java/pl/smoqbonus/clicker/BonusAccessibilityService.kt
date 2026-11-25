@@ -32,9 +32,10 @@ class BonusAccessibilityService : AccessibilityService() {
     private var lastTap = 0L
     private var destroyed = false
 
-    private val recognizer by lazy {
+    private val recognizerDelegate = lazy {
         TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
     }
+    private val recognizer by recognizerDelegate
 
     private val scanWatchdog = Runnable {
         if (busy) {
@@ -102,7 +103,10 @@ class BonusAccessibilityService : AccessibilityService() {
                 mainExecutor,
                 object : TakeScreenshotCallback {
                     override fun onSuccess(screenshot: ScreenshotResult) {
-                        if (scanId != activeScanId || destroyed) return
+                        if (scanId != activeScanId || destroyed) {
+                            screenshot.hardwareBuffer.close()
+                            return
+                        }
 
                         var bitmap: Bitmap? = null
                         try {
@@ -229,7 +233,7 @@ class BonusAccessibilityService : AccessibilityService() {
         handler.removeCallbacks(scanWatchdog)
         busy = false
         activeScanId++
-        if (::recognizer.isInitialized) {
+        if (recognizerDelegate.isInitialized()) {
             recognizer.close()
         }
         super.onDestroy()
