@@ -1,6 +1,7 @@
 package pl.smoqbonus.clicker
 
 import android.app.Activity
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Color
@@ -207,7 +208,7 @@ class MainActivity : Activity() {
     private fun isAccessibilityServiceEnabled(): Boolean {
         val manager = getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
         val expected = ComponentName(this, BonusAccessibilityService::class.java)
-        return manager.getEnabledAccessibilityServiceList(AccessibilityManager.FEEDBACK_ALL_MASK)
+        return manager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK)
             .any { info ->
                 val serviceInfo = info.resolveInfo.serviceInfo
                 serviceInfo.packageName == expected.packageName &&
